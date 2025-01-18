@@ -45,9 +45,10 @@ impl Target for UsbProperties {
     fn open_in_context(self, context: *mut ffi::ftdi_context) -> Result<()> {
         let description = self
             .description
+            .as_ref()
             .map(|s| s.as_ptr())
             .unwrap_or(std::ptr::null());
-        let serial = self.serial.map(|s| s.as_ptr()).unwrap_or(std::ptr::null());
+        let serial = self.serial.as_ref().map(|s| s.as_ptr()).unwrap_or(std::ptr::null());
         let index = self.index.unwrap_or(0).into();
         let result = unsafe {
             ffi::ftdi_usb_open_desc_index(
